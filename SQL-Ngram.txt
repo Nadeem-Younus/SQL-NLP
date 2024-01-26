@@ -1,0 +1,21 @@
+### FOR ngrams ###
+
+select
+distinct a.event_dt, a.chat_id, a.visitor_id, a.mtn, a.cluster1, b.bigrams
+from
+(select event_dt, visitor_id, mtn, cluster1, chat_id
+from ##_chat_hourly
+where event_dt between '2021-09-01' and '2021-09-30'
+and mtn is not null) a
+FULL OUTER JOIN
+(select distinct event_dt, chat_id,visitor_id, mtn, bigrams
+from ##bigrams_tbl) b
+ON
+a.event_dt = b.event_dt
+and a.chat_id = b.chat_id
+and a.visitor_id = b.visitor_id
+and a.mtn = b.mtn
+where a.event_dt between '2021-09-01' and '2021-09-30'
+--and b.chat_id = 'ff4337ea-a7287467a'
+and a.cluster1 LIKE '%SHIPPING%'
+and b.bigrams LIKE '%ship%'
