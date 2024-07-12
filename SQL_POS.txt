@@ -1,8 +1,8 @@
 ### FOR POS ###
 
-select distinct chat_id, visitor_id, mtn, event_dt, cust_words, grammer 
-from #pos_txt_tbl
-where event_dt between '2021-09-01' and '2021-09-30'
+SELECT distinct chat_id, visitor_id, mtn, event_dt, cust_words, grammer 
+FROM #pos_txt_tbl
+WHERE event_dt between '2021-09-01' and '2021-09-30'
 --and mtn = 'e454beab0196c8233a064f11'
 and visitor_id = '34315767277590'
 and (grammer LIKE '%NN%' or grammer LIKE '%VB%');
