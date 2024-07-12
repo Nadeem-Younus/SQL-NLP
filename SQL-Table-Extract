@@ -1,0 +1,31 @@
+SELECT distinct g.Event_dt AS Event_DT, g.Chat_id AS Chat_ID, g.Visitor_id AS Visitor_ID, 
+g.MTN AS Mtn, g.bigrams AS Bigrams, t.cust_words AS Cust_Words
+FROM
+(SELECT a.*, b.*
+FROM
+(SELECT c.event_dt AS Event_dt, c.visitor_id as Visitor_id, c.mtn AS MTN, 
+c.w2v_cluster1, c.chat_conversation_id AS Chat_id
+FROM #table-A# c
+where to_date(c.event_dt) between '2020-09-01' and '2020-09-30') a
+FULL OUTER JOIN
+(SELECT i.event_dt, i.chat_conversation_id, i.visitor_id, i.mtn, i.bigrams
+FROM #table-B# i
+where to_date(i.event_dt) between '2020-09-01' and '2020-09-30') b
+ON
+(b.event_dt = a.Event_dt
+and b.chat_conversation_id = a.Chat_id
+and b.visitor_id = a.Visitor_id
+and b.mtn = a.MTN)
+--where a.event_dt between '2020-09-01' and '2020-09-30'
+--and b.chat_conversation_id = '4b4a87467a'
+--and b.bigrams LIKE '%screen%')
+) g
+FULL OUTER JOIN
+(SELECT distinct t.event_dt, t.chat_conversation_id, t.visitor_id, mtn, t.cust_words
+FROM #table-B# t
+where event_dt between '2020-09-01' and '2020-09-30') t
+ON
+g.Event_dt = t.event_dt
+and g.Chat_id = t.chat_conversation_id
+and g.Visitor_id = t.visitor_id
+and g.MTN = t.mtn
